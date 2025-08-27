@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Content Fetcher</title>
+    <style>
+        body {
+            font-family: 'Courier New', sans-serif;
+        }
+
+        #contentContainer {
+            max-height: calc(100vh - 40px);
+            overflow: auto;
+            margin: 0;
+            width: 100%;
+        }
+
+        #contentOutput {
+            white-space: pre-wrap;
+        }
+
+        #scrollUp{
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #scrollDown {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        #scrollUp:hover,
+        #scrollDown:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="w-full max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-xl shadow-lg">
+        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+            <input type="url" id="urlInput" placeholder="https://example.com">
+            <button id="fetchButton">
+                Fetch
+            </button>
+            <button id="scrollUp">
+                Scroll Up
+            </button>
+            <button id="scrollDown">
+                Scroll Down
+            </button>
+        </div>
+
+        <div id="resultContainer" class="mt-4">
+            <div id="loadingIndicator" class="hidden justify-center items-center py-8">
+                <span>Loading...</span>
+            </div>
+            <div id="contentContainer">
+                <pre id="contentOutput"></pre>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('urlInput');
+        const fetchButton = document.getElementById('fetchButton');
+        const contentOutput = document.getElementById('contentOutput');
+        const contentContainer = document.getElementById('contentContainer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const scrollUpButton = document.getElementById('scrollUp');
+        const scrollDownButton = document.getElementById('scrollDown');
+
+        // The backend is now at the same origin, so we can use a relative path.
+        const backendUrl = '/fetch-url';
+
+        const fetchUrlContent = async () => {
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                contentOutput.textContent = 'Error: Please enter a URL.';
+                return;
+            }
+
+            loadingIndicator.style.display = 'flex';
+            contentOutput.textContent = '';
+            fetchButton.disabled = true;
+            fetchButton.classList.add('opacity-50', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    contentOutput.textContent = data.content;
+                } else {
+                    contentOutput.textContent = `Error: ${data.error || 'An unknown error occurred.'}`;
+                }
+            } catch (error) {
+                console.error('Fetch error:', error);
+                contentOutput.textContent = 'Error: Could not connect to the backend server. Is it running?';
+            } finally {
+                loadingIndicator.style.display = 'none';
+                fetchButton.disabled = false;
+                fetchButton.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        };
+
+        fetchButton.addEventListener('click', fetchUrlContent);
+
+        urlInput.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                fetchUrlContent();
+            }
+        });
+
+        scrollUpButton.addEventListener('click', () => {
+            contentContainer.scrollTop -= (contentContainer.clientHeight - 30);
+        });
+
+        scrollDownButton.addEventListener('click', () => {
+            contentContainer.scrollTop += (contentContainer.clientHeight - 30);
+        });
+    </script>
+</body>
+
+</html>
