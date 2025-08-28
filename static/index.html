@@ -21,34 +21,48 @@
             white-space: pre-wrap;
         }
 
-        #scrollUp {
+        #scrollUp,
+        #scrollDown {
             position: absolute;
+            cursor: pointer;
+            opacity: .5;
+            height: 30px;
+            border-radius: 25%;
+        }
+
+        #scrollUp {
             top: 10px;
             right: 10px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            cursor: pointer;
+
         }
 
         #scrollDown {
-            position: absolute;
             bottom: 10px;
             right: 10px;
-            padding: 5px 10px;
-            border: 1px solid #ccc;
-            cursor: pointer;
         }
 
-        #scrollUp:hover,
-        #scrollDown:hover {
-            background-color: #f5f5f5;
+        .toolbar {
+            display: flex;
+            flex-direction: row;
+            gap: 4px;
+            padding-right: 70px;
+        }
+
+        #urlInput {
+            flex: 1;
         }
     </style>
 </head>
 
 <body>
     <div>
-        <div>
+        <button id="scrollUp">
+            Up
+        </button>
+        <button id="scrollDown">
+            Down
+        </button>
+        <div class="toolbar">
             <button onclick="loadLastFetched()">Load Last Fetched</button>
             <select id="template" onchange="changeTemplate()">
                 <option value="NONE">None</option>
@@ -60,16 +74,10 @@
             <button id="fetchButton">
                 Fetch
             </button>
-            <button id="scrollUp">
-                Scroll Up
-            </button>
-            <button id="scrollDown">
-                Scroll Down
-            </button>
         </div>
 
-        <div id="resultContainer" class="mt-4">
-            <div id="loadingIndicator" class="hidden justify-center items-center py-8">
+        <div id="resultContainer">
+            <div id="loadingIndicator">
                 <span>Loading...</span>
             </div>
             <div id="contentContainer">
