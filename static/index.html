@@ -47,8 +47,15 @@
 </head>
 
 <body>
-    <div class="w-full max-w-4xl mx-auto p-6 md:p-8 bg-white rounded-xl shadow-lg">
-        <div class="flex flex-col sm:flex-row gap-3 mb-6">
+    <div>
+        <div>
+            <button onclick="loadLastFetched()">Load Last Fetched</button>
+            <select id="template" onchange="changeTemplate()">
+                <option value="NONE">None</option>
+                <option value="TTS1">TTS with id</option>
+                <option value="TTS2">TTS full</option>
+                <option value="TCH">TCH</option>
+            </select>
             <input type="url" id="urlInput" placeholder="https://example.com">
             <button id="fetchButton">
                 Fetch
@@ -109,6 +116,7 @@
 
                 if (response.ok) {
                     contentOutput.textContent = data.content;
+                    localStorage.setItem('lastFetchedUrl', url);
                 } else {
                     contentOutput.textContent = `Error: ${data.error || 'An unknown error occurred.'}`;
                 }
@@ -137,6 +145,34 @@
         scrollDownButton.addEventListener('click', () => {
             contentContainer.scrollTop += (contentContainer.clientHeight - 30);
         });
+
+        function changeTemplate() {
+            const selectedTemplate = document.getElementById('template').value;
+            switch (selectedTemplate) {
+                case 'TTS1':
+                    urlInput.value = 'https://tangthuvien.net/get-4-chap?story_id=38060&sort_by_ttv=1';
+                    break;
+                case 'TTS2':
+                    urlInput.value = 'https://tts2.khanhnguyen.com/';
+                    break;
+                case 'TCH':
+                    urlInput.value = 'https://truyenchuhay.vn/name/chuong-1';
+                    break;
+                case 'NONE':
+                    urlInput.value = '';
+                    break;
+                default:
+                    urlInput.value = '';
+            }
+        }
+
+        function loadLastFetched() {
+            const lastFetchedUrl = localStorage.getItem('lastFetchedUrl');
+                if (lastFetchedUrl) {
+                    urlInput.value = lastFetchedUrl;
+                    fetchUrlContent();
+                }
+        }
     </script>
 </body>
 
