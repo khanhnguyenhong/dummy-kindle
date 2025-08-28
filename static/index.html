@@ -7,7 +7,7 @@
     <title>URL Content Fetcher</title>
     <style>
         body {
-            font-family: 'Courier New', sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
         #contentContainer {
@@ -21,7 +21,7 @@
             white-space: pre-wrap;
         }
 
-        #scrollUp{
+        #scrollUp {
             position: absolute;
             top: 10px;
             right: 10px;
@@ -168,10 +168,10 @@
 
         function loadLastFetched() {
             const lastFetchedUrl = localStorage.getItem('lastFetchedUrl');
-                if (lastFetchedUrl) {
-                    urlInput.value = lastFetchedUrl;
-                    fetchUrlContent();
-                }
+            if (lastFetchedUrl) {
+                urlInput.value = lastFetchedUrl;
+                fetchUrlContent();
+            }
         }
     </script>
 </body>
