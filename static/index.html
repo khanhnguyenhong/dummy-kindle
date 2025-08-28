@@ -43,6 +43,7 @@
 
         .toolbar {
             display: flex;
+            max-height: 22px;
             flex-direction: row;
             gap: 4px;
             padding-right: 70px;
@@ -56,14 +57,17 @@
 
 <body>
     <div>
-        <button id="scrollUp">
-            Up
-        </button>
-        <button id="scrollDown">
-            Down
-        </button>
+        <div>
+            <button id="scrollUp">
+                Up
+            </button>
+            <button id="scrollDown">
+                Down
+            </button>
+        </div>
+
         <div class="toolbar">
-            <button onclick="loadLastFetched()">Load Last Fetched</button>
+            <button onclick="loadLastFetched()">Load</button>
             <select id="template" onchange="changeTemplate()">
                 <option value="NONE">None</option>
                 <option value="TTS1">TTS with id</option>
